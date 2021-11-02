@@ -5,7 +5,8 @@ const timeEl = document.getElementById('time')
 const board = document.getElementById('board')
 let time = 0;
 let score = 0;
-console.log(screens);
+let interval;
+
 startBtn.addEventListener('click', (e) => {
   e.preventDefault();
   screens[0].classList.add('up')
@@ -27,7 +28,7 @@ board.addEventListener('click', (e) => {
 })
 
 function startGame() {
-  setInterval(decreaseTime, 1000);
+  interval = setInterval(decreaseTime, 1000);
   createRandomCircle();
   setTime(time);
 }
@@ -49,8 +50,14 @@ function setTime(value) {
 }
 
 function finishGame() {
+  clearInterval(interval)
   timeEl.parentNode.classList.add('hide');
-  board.innerHTML = `<h1>Ваш счет: <span class="primary">${score}</span></h1>`
+  board.innerHTML = `
+      <div id="end">
+        <h1>Ваш счет: <span class="primary">${score}</span></h1>
+        <button class="start new-game-button" onclick="newGame()">Новая игра</button>
+      </div>
+    `
 }
 
 function createRandomCircle() {
@@ -81,4 +88,15 @@ function getRandomColor() {
     color += letters[Math.floor(Math.random() * 16)];
   }
   return color;
+}
+
+function newGame() {
+  score = 0;
+  time = 0;
+
+  timeEl.parentNode.classList.remove('hide');
+  board.innerHTML = null;
+
+  screens[1].classList.remove('up')
+  screens[0].classList.remove('up')
 }
